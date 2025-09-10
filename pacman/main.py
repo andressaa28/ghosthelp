@@ -4,6 +4,12 @@ import random
 def tela_inicial():
     pg.init()
     pg.joystick.init()
+    
+    if pg.joystick.get_count() > 0:
+        joystick = pg.joystick.Joystick(0)
+        joystick.init()
+    else:
+        joystick = None
 
     scale = 23
     window_width = 740
@@ -69,6 +75,16 @@ def tela_inicial():
                 elif event.key == pg.K_ESCAPE:
                     pg.quit()
                     quit()
+            if event.type == pg.JOYBUTTONDOWN:
+                if event.button == 0:  # Botão A
+                    rodando = False
+                elif event.button == 1:  # Botão B
+                    tela_ajuda()
+                elif event.button == 7:  # Start
+                    rodando = False
+                elif event.button == 6:  # Back
+                    pg.quit()
+                    quit()
 
         pg.display.update()
 
@@ -76,6 +92,14 @@ def tela_inicial():
 
 def escolher_personagem():
     pg.init()
+    pg.joystick.init()
+
+    if pg.joystick.get_count() > 0:
+        joystick = pg.joystick.Joystick(0)
+        joystick.init()
+    else:
+        joystick = None
+    
     scale = 23
     window_width = 740
     window_height = 620
@@ -137,6 +161,7 @@ def escolher_personagem():
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
+            # teclado
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_LEFT:
                     selecao = (selecao - 1) % len(personagens)
@@ -151,12 +176,54 @@ def escolher_personagem():
                 elif event.key == pg.K_h:  # tecla H abre ajuda
                     tela_ajuda()
 
+            # Joystick - Botões
+            if event.type == pg.JOYBUTTONDOWN:
+                if event.button == 0:  # A
+                    escolhendo = False
+                elif event.button == 7:  # Start
+                    escolhendo = False
+                elif event.button == 1:  # B
+                    tela_ajuda()
+                
+            # Joystick - D-Pad
+            if event.type == pg.JOYHATMOTION:
+                x, y = event.value
+                if x == -1:
+                    selecao = (selecao - 1) % len(personagens)
+                elif x == 1:
+                    selecao = (selecao + 1) % len(personagens)
+                elif y == 1:
+                    selecao = (selecao - cols) % len(personagens)
+                elif y == -1:
+                    selecao = (selecao + cols) % len(personagens)
+
+            # Joystick - Analógico
+            if event.type == pg.JOYAXISMOTION:
+                if event.axis == 0:  # Eixo X
+                    if event.value < -0.5:
+                        selecao = (selecao - 1) % len(personagens)
+                    elif event.value > 0.5:
+                        selecao = (selecao + 1) % len(personagens)
+                elif event.axis == 1:  # Eixo Y
+                    if event.value < -0.5:
+                        selecao = (selecao - cols) % len(personagens)
+                    elif event.value > 0.5:
+                        selecao = (selecao + cols) % len(personagens)
+
         pg.display.update()
 
     return selecao
 
 def tela_game_over(score):
     pg.init()
+    pg.joystick.init()
+
+    if pg.joystick.get_count() > 0:
+        joystick = pg.joystick.Joystick(0)
+        joystick.init()
+    else:
+        joystick = None
+
     window = pg.display.set_mode((740, 620))
     pg.display.set_caption("Game Over")
 
@@ -199,6 +266,7 @@ def tela_game_over(score):
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
+            # teclado
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:  # Vai para os créditos
                     tela_creditos()  # Mostra créditos
@@ -213,6 +281,22 @@ def tela_game_over(score):
                     quit()
                 elif event.key == pg.K_h:  # tecla H abre ajuda
                     tela_ajuda()
+
+            # Joystick - Botões
+            if event.type == pg.JOYBUTTONDOWN:
+                if event.button == 0:  # A
+                    tela_creditos()
+                    tela_inicial()
+                    return
+                elif event.button == 7:  # Start
+                    tela_creditos()
+                    tela_inicial()
+                    return
+                elif event.button == 1:  # B
+                    tela_ajuda()
+                elif event.button == 6:  # Back
+                    pg.quit()
+                    quit()
 
         pg.display.update()
 
@@ -276,6 +360,14 @@ def tela_transicao_fase3():
 
 def tela_vitoria(score):
     pg.init()
+    pg.joystick.init()
+
+    if pg.joystick.get_count() > 0:
+        joystick = pg.joystick.Joystick(0)
+        joystick.init()
+    else:
+        joystick = None
+
     window = pg.display.set_mode((740, 620))
     pg.display.set_caption("Vitória!")
 
@@ -310,6 +402,7 @@ def tela_vitoria(score):
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
+            # teclado
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:  # Vai para os créditos
                     tela_creditos()  # Mostra créditos
@@ -320,6 +413,22 @@ def tela_vitoria(score):
                     selecao = escolher_personagem()  # se quiser reaparecer seleção
                     rodando = False
                 elif event.key == pg.K_ESCAPE:  # Sai
+                    pg.quit()
+                    quit()
+
+            # Joystick - Botões
+            if event.type == pg.JOYBUTTONDOWN:
+                if event.button == 0:  # A
+                    tela_creditos()
+                    tela_inicial()
+                    return
+                elif event.button == 7:  # Start
+                    tela_creditos()
+                    tela_inicial()
+                    return
+                elif event.button == 1:  # B
+                    tela_ajuda()
+                elif event.button == 6:  # Back
                     pg.quit()
                     quit()
 
@@ -380,6 +489,14 @@ def tela_creditos():
 
 def tela_ajuda():
     pg.init()
+    pg.joystick.init()
+
+    if pg.joystick.get_count() > 0:
+        joystick = pg.joystick.Joystick(0)
+        joystick.init()
+    else:
+        joystick = None
+
     window = pg.display.set_mode((740, 620))
     pg.display.set_caption("Ajuda")
 
@@ -433,9 +550,20 @@ def tela_ajuda():
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
+            # teclado
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:  # Voltar
                     rodando = False
+            # Joystick - Botões
+            if event.type == pg.JOYBUTTONDOWN:
+                if event.button == 0:  # A
+                    rodando = False
+                elif event.button == 7:  # Start
+                    rodando = False
+                elif event.button == 6:  # Back
+                    pg.quit()
+                    quit()
+
 
         pg.display.update()
 
