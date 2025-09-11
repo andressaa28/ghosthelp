@@ -71,7 +71,7 @@ def tela_inicial():
                 if event.key == pg.K_RETURN:  # Enter
                     rodando = False
                 elif event.key == pg.K_h:  # tecla H abre ajuda
-                    tela_ajuda()
+                    tela_escolha_controle()
                 elif event.key == pg.K_ESCAPE:
                     pg.quit()
                     quit()
@@ -79,10 +79,10 @@ def tela_inicial():
                 if event.button == 0:  # Botão A
                     rodando = False
                 elif event.button == 1:  # Botão B
-                    tela_ajuda()
+                    tela_escolha_controle()
                 elif event.button == 7:  # Start
                     rodando = False
-                elif event.button == 6:  # Back
+                elif event.button == 2:  # Back
                     pg.quit()
                     quit()
 
@@ -174,7 +174,7 @@ def escolher_personagem():
                 elif event.key == pg.K_RETURN:
                     escolhendo = False
                 elif event.key == pg.K_h:  # tecla H abre ajuda
-                    tela_ajuda()
+                    tela_escolha_controle()
 
             # Joystick - Botões
             if event.type == pg.JOYBUTTONDOWN:
@@ -183,7 +183,7 @@ def escolher_personagem():
                 elif event.button == 7:  # Start
                     escolhendo = False
                 elif event.button == 1:  # B
-                    tela_ajuda()
+                    tela_escolha_controle()
                 
             # Joystick - D-Pad
             if event.type == pg.JOYHATMOTION:
@@ -487,7 +487,79 @@ def tela_creditos():
 
         pg.display.update()
 
-def tela_ajuda():
+import pygame as pg
+import sys
+
+def tela_escolha_controle():
+    pg.init()
+    window = pg.display.set_mode((740, 620))
+    pg.display.set_caption("Escolha o Controle")
+
+    font_titulo = pg.font.SysFont("Courier New", 48, bold=True)
+    font_opcao = pg.font.SysFont("Courier New", 32, bold=True)
+    small_font = pg.font.SysFont("Courier New", 22, bold=True)
+
+    clock = pg.time.Clock()
+    rodando = True
+    escolha = None  # 1 = teclado, 2 = joystick
+
+    while rodando:
+        clock.tick(30)
+        window.fill((15, 15, 40))
+
+        # título
+        titulo = font_titulo.render("Escolha seu Controle", True, (255, 215, 0))
+        window.blit(titulo, titulo.get_rect(center=(370, 120)))
+
+        # opções
+        opc1 = font_opcao.render("[1] Teclado", True, (255, 255, 255))
+        window.blit(opc1, opc1.get_rect(center=(370, 250)))
+
+        opc2 = font_opcao.render("[A] Joystick", True, (255, 255, 255))
+        window.blit(opc2, opc2.get_rect(center=(370, 320)))
+
+        instrucao = small_font.render("Para TECLADO aperte [1]  |  Para JOYSTICK aperte [A]", True, (180, 180, 180))
+        window.blit(instrucao, instrucao.get_rect(center=(370, 500)))
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_1:
+                    escolha = 1
+                    rodando = False
+                elif event.key == pg.K_2:
+                    escolha = 2
+                    rodando = False
+                elif event.key == pg.K_ESCAPE:
+                    pg.quit()
+                    sys.exit()
+
+            if event.type == pg.JOYBUTTONDOWN:
+                if event.button == 0:  # A
+                    escolha = 2
+                    rodando = False
+                elif event.button == 7:  # Start
+                    escolha = 2
+                    rodando = False
+                elif event.button == 6:  # Back
+                    pg.quit()
+                    sys.exit()
+
+        pg.display.update()
+
+    # chama tela de ajuda correta
+    if escolha == 1:
+        tela_ajuda()
+    elif escolha == 2:
+        tela_ajuda_joystick()
+
+import pygame as pg
+import sys
+
+def tela_ajuda_joystick():
     pg.init()
     pg.joystick.init()
 
@@ -498,9 +570,9 @@ def tela_ajuda():
         joystick = None
 
     window = pg.display.set_mode((740, 620))
-    pg.display.set_caption("Ajuda")
+    pg.display.set_caption("Ajuda - Joystick")
 
-    font_titulo = pg.font.SysFont("Courier New", 48, bold=True)
+    font_titulo = pg.font.SysFont("Courier New", 56, bold=True)
     font = pg.font.SysFont("Courier New", 26, bold=True)
     small_font = pg.font.SysFont("Courier New", 20, bold=True)
 
@@ -512,44 +584,138 @@ def tela_ajuda():
 
     rodando = True
     while rodando:
-        window.fill((0, 0, 0))
+        # Fundo com gradiente
+        for y in range(620):
+            cor = (20, 20 + y // 15, 40 + y // 10)
+            pg.draw.line(window, cor, (0, y), (740, y))
 
-        # Título
-        titulo = font_titulo.render("AJUDA", True, (255, 255, 0))
-        window.blit(titulo, titulo.get_rect(center=(370, 60)))
+        # Caixa título
+        pg.draw.rect(window, (0, 0, 0), (150, 30, 440, 70), border_radius=15)
+        titulo = font_titulo.render("AJUDA - JOYSTICK", True, (0, 200, 255))
+        window.blit(titulo, titulo.get_rect(center=(370, 65)))
 
-        # Controles
+        # Caixa controles
+        pg.draw.rect(window, (0, 0, 0), (60, 120, 620, 180), border_radius=15)
         controles = [
-            "Movimento: ↑ ↓ ← → ou W A S D",
+            "Movimento: Analógico Esquerdo ou D-Pad",
+            "Botão A: Confirmar / Iniciar",
+            "Botão B: Ajuda",
+            "Botão Start: Pausar / Continuar",
+            "Botão Back: Sair"
+        ]
+        for i, txt in enumerate(controles):
+            line = font.render(txt, True, (255, 255, 255))
+            window.blit(line, (100, 140 + i * 32))
+
+        # Caixa itens
+        pg.draw.rect(window, (0, 0, 0), (60, 320, 620, 230), border_radius=15)
+
+        window.blit(img_pocao, (100, 330))
+        window.blit(small_font.render("Poção: deixa os fantasmas vulneráveis", True, (255, 255, 255)), (160, 340))
+
+        window.blit(img_coracao, (100, 390))
+        window.blit(small_font.render("Coração: ganha uma vida extra", True, (255, 255, 255)), (160, 400))
+
+        window.blit(img_turbo, (100, 450))
+        window.blit(small_font.render("Turbo: aumenta a velocidade do Pac-Man", True, (255, 255, 255)), (160, 460))
+
+        window.blit(img_freeze, (100, 510))
+        window.blit(small_font.render("Freeze: congela os fantasmas por alguns segundos", True, (255, 255, 255)), (160, 520))
+
+        # Instrução para sair
+        sair = small_font.render("Pressione A ou Start para voltar", True, (200, 200, 200))
+        window.blit(sair, sair.get_rect(center=(370, 580)))
+
+        # Eventos
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_RETURN:  # também permite Enter do teclado
+                    rodando = False
+            if event.type == pg.JOYBUTTONDOWN:
+                if event.button == 0:  # A
+                    rodando = False
+                elif event.button == 7:  # Start
+                    rodando = False
+                elif event.button == 6:  # Back
+                    pg.quit()
+                    sys.exit()
+
+        pg.display.update()
+
+def tela_ajuda():
+    pg.init()
+    pg.joystick.init()
+
+    if pg.joystick.get_count() > 0:
+        joystick = pg.joystick.Joystick(0)
+        joystick.init()
+    else:
+        joystick = None
+
+    window = pg.display.set_mode((740, 620))
+    pg.display.set_caption("AJUDA - TECLADO")
+
+    font_titulo = pg.font.SysFont("Courier New", 56, bold=True)
+    font = pg.font.SysFont("Courier New", 26, bold=True)
+    small_font = pg.font.SysFont("Courier New", 20, bold=True)
+
+    # Carregar imagens usadas no jogo
+    img_pocao = pg.image.load("img/pocao.png")
+    img_coracao = pg.image.load("img/coracao.png")
+    img_turbo = pg.image.load("img/turbo.png")
+    img_freeze = pg.image.load("img/freeze.png")
+
+    rodando = True
+    while rodando:
+        # Fundo com gradiente
+        for y in range(620):
+            cor = (20, 20 + y // 15, 40 + y // 10)
+            pg.draw.line(window, cor, (0, y), (740, y))
+
+        # Caixa título
+        pg.draw.rect(window, (0, 0, 0), (150, 30, 440, 70), border_radius=15)
+        titulo = font_titulo.render("AJUDA", True, (255, 215, 0))
+        window.blit(titulo, titulo.get_rect(center=(370, 65)))
+
+        # Caixa controles
+        pg.draw.rect(window, (0, 0, 0), (60, 120, 620, 150), border_radius=15)
+        controles = [
+            "Movimento: ↑ ↓ ← →  ou  W A S D",
             "Pause: P",
             "Reiniciar: R",
             "Sair: ESC"
         ]
         for i, txt in enumerate(controles):
             line = font.render(txt, True, (255, 255, 255))
-            window.blit(line, (80, 140 + i * 40))
+            window.blit(line, (100, 140 + i * 35))
 
-        # Legenda dos itens
-        window.blit(img_pocao, (100, 320))
-        window.blit(small_font.render("Poção: deixa os fantasmas vulneráveis", True, (255, 255, 255)), (160, 330))
+        # Caixa itens
+        pg.draw.rect(window, (0, 0, 0), (60, 290, 620, 260), border_radius=15)
 
-        window.blit(img_coracao, (100, 380))
-        window.blit(small_font.render("Coração: ganha uma vida extra", True, (255, 255, 255)), (160, 390))
+        window.blit(img_pocao, (100, 310))
+        window.blit(small_font.render("Poção: deixa os fantasmas vulneráveis", True, (255, 255, 255)), (160, 320))
 
-        window.blit(img_turbo, (100, 440))
-        window.blit(small_font.render("Turbo: aumenta a velocidade do Pac-Man", True, (255, 255, 255)), (160, 450))
+        window.blit(img_coracao, (100, 370))
+        window.blit(small_font.render("Coração: ganha uma vida extra", True, (255, 255, 255)), (160, 380))
 
-        window.blit(img_freeze, (100, 500))
-        window.blit(small_font.render("Freeze: congela os fantasmas por alguns segundos", True, (255, 255, 255)), (160, 510))
+        window.blit(img_turbo, (100, 430))
+        window.blit(small_font.render("Turbo: aumenta a velocidade do Pac-Man", True, (255, 255, 255)), (160, 440))
+
+        window.blit(img_freeze, (100, 490))
+        window.blit(small_font.render("Freeze: congela os fantasmas", True, (255, 255, 255)), (160, 500))
 
         # Instrução para sair
         sair = small_font.render("Pressione ENTER para voltar", True, (200, 200, 200))
         window.blit(sair, sair.get_rect(center=(370, 580)))
 
+        # Eventos
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-                quit()
+                sys.exit()
             # teclado
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:  # Voltar
@@ -562,8 +728,7 @@ def tela_ajuda():
                     rodando = False
                 elif event.button == 6:  # Back
                     pg.quit()
-                    quit()
-
+                    sys.exit()
 
         pg.display.update()
 
@@ -1776,9 +1941,9 @@ while True:  # Loop principal (menu -> jogo -> menu)
                 if event.button == 0:   # Botão A -> Enter
                     pg.event.post(pg.event.Event(pg.KEYDOWN, key=pg.K_RETURN))
                     pg.event.post(pg.event.Event(pg.KEYUP,   key=pg.K_RETURN))
-                elif event.button == 1: # Botão B -> sair para menu
+                elif event.button == 2: # Botão B -> sair para menu
                     sair_para_menu = True
-                elif event.button == 2: # Botão X -> ajuda (tecla 'h')
+                elif event.button == 1: # Botão X -> ajuda (tecla 'h')
                     tela_ajuda()
                 elif event.button == 3: # Botão Y -> pausar (tecla 'p')
                     paused = not paused
