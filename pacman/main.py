@@ -573,7 +573,7 @@ def tela_ajuda_joystick():
     pg.display.set_caption("Ajuda - Joystick")
 
     font_titulo = pg.font.SysFont("Courier New", 56, bold=True)
-    font = pg.font.SysFont("Courier New", 26, bold=True)
+    font = pg.font.SysFont("Courier New", 24, bold=True)
     small_font = pg.font.SysFont("Courier New", 20, bold=True)
 
     # Carregar imagens usadas no jogo
@@ -590,12 +590,12 @@ def tela_ajuda_joystick():
             pg.draw.line(window, cor, (0, y), (740, y))
 
         # Caixa título
-        pg.draw.rect(window, (0, 0, 0), (150, 30, 440, 70), border_radius=15)
+        pg.draw.rect(window, (0, 0, 0), (60, 30, 620, 70), border_radius=15)
         titulo = font_titulo.render("AJUDA - JOYSTICK", True, (0, 200, 255))
         window.blit(titulo, titulo.get_rect(center=(370, 65)))
 
         # Caixa controles
-        pg.draw.rect(window, (0, 0, 0), (60, 120, 620, 180), border_radius=15)
+        pg.draw.rect(window, (0, 0, 0), (60, 130, 620, 180), border_radius=15)
         controles = [
             "Movimento: Analógico Esquerdo ou D-Pad",
             "Botão A: Confirmar / Iniciar",
@@ -620,7 +620,7 @@ def tela_ajuda_joystick():
         window.blit(small_font.render("Turbo: aumenta a velocidade do Pac-Man", True, (255, 255, 255)), (160, 460))
 
         window.blit(img_freeze, (100, 510))
-        window.blit(small_font.render("Freeze: congela os fantasmas por alguns segundos", True, (255, 255, 255)), (160, 520))
+        window.blit(small_font.render("Freeze: congela os fantasmas", True, (255, 255, 255)), (160, 520))
 
         # Instrução para sair
         sair = small_font.render("Pressione A ou Start para voltar", True, (200, 200, 200))
@@ -1902,7 +1902,7 @@ while True:  # Loop principal (menu -> jogo -> menu)
                 elif tecla == 'r':
                     sair_para_menu = True
                 elif event.key == pg.K_h:  # tecla H abre ajuda
-                    tela_ajuda()
+                    tela_escolha_controle()
                 else:
                     jogo.move(tecla)  # aceita 'w','a','s','d' e 'up','down','left','right'
                 if event.type == pg.KEYDOWN:
@@ -1941,10 +1941,10 @@ while True:  # Loop principal (menu -> jogo -> menu)
                 if event.button == 0:   # Botão A -> Enter
                     pg.event.post(pg.event.Event(pg.KEYDOWN, key=pg.K_RETURN))
                     pg.event.post(pg.event.Event(pg.KEYUP,   key=pg.K_RETURN))
-                elif event.button == 2: # Botão B -> sair para menu
+                elif event.button == 2: # Botão X -> sair para menu
                     sair_para_menu = True
-                elif event.button == 1: # Botão X -> ajuda (tecla 'h')
-                    tela_ajuda()
+                elif event.button == 1: # Botão B -> ajuda (tecla 'h')
+                    tela_escolha_controle()
                 elif event.button == 3: # Botão Y -> pausar (tecla 'p')
                     paused = not paused
                 elif event.button == 6: # Botão Select -> sair do jogo (ESC)
