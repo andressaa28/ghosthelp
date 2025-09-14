@@ -676,12 +676,12 @@ def tela_ajuda():
             pg.draw.line(window, cor, (0, y), (740, y))
 
         # Caixa título
-        pg.draw.rect(window, (0, 0, 0), (150, 30, 440, 70), border_radius=15)
-        titulo = font_titulo.render("AJUDA", True, (255, 215, 0))
+        pg.draw.rect(window, (0, 0, 0), (60, 30, 620, 70), border_radius=15)
+        titulo = font_titulo.render("AJUDA - TECLADO", True, (255, 215, 0))
         window.blit(titulo, titulo.get_rect(center=(370, 65)))
 
         # Caixa controles
-        pg.draw.rect(window, (0, 0, 0), (60, 120, 620, 150), border_radius=15)
+        pg.draw.rect(window, (0, 0, 0), (60, 130, 620, 150), border_radius=15)
         controles = [
             "Movimento: ↑ ↓ ← →  ou  W A S D",
             "Pause: P",
@@ -885,7 +885,19 @@ class PacMan:
         self.turbo_duration = 420  # ~7 segundos a 60fps
         self.normal_speed = self.scale / 16
         self.turbo_speed = self.scale / 8
-        self.score_turbo = 50
+        self.score_turbo = 55
+
+    #def aumentar_dificuldade(self):
+     #   self.level += 1
+      #  self.ghost_speed_factor += 0.5  # já existia
+#
+ #       # Define a pontuação mínima para liberar o turbo por fase
+   #     if self.level == 1:
+  #          self.score_turbo = 55
+    #    elif self.level == 2:
+     #       self.score_turbo = 250
+      #  elif self.level == 3:
+       #3     self.score_turbo = 500
 
         # Freeze (congelar fantasmas)
         self.freeze_mode = False
@@ -1741,10 +1753,10 @@ class PacMan:
                     ['#','o','.','.','#','#','.','.','.','.','.','.','.',' ',' ','.','.','.','.','.','.','.','#','#','.','.','o','#'],
                     ['#','#','#','.','#','#','.','#','#','.','#','#','#','#','#','#','#','#','.','#','#','.','#','#','.','#','#','#'],
                     ['#','#','#','.','#','#','.','#','#','.','#','#','#','#','#','#','#','#','.','#','#','.','#','#','.','#','#','#'],
-                    ['#','.','.','.','.','.','.','#','#','.','.','.','.','#','#','.','.','.','.','#','#','.','.','.','.','.','.','#'],
+                    ['#','.','.','.','.','.','v','#','#','f','.','.','.','#','#','.','.','.','.','#','#','.','.','.','.','.','.','#'],
                     ['#','.','#','#','#','#','#','#','#','#','#','#','.','#','#','.','#','#','#','#','#','#','#','#','#','#','.','#'],
                     ['#','.','#','#','#','#','#','#','#','#','#','#','.','#','#','.','#','#','#','#','#','#','#','#','#','#','.','#'],
-                    ['#','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','#'],
+                    ['#','.','.','.','.','.','t','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','#'],
                     ['#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#']]
 
     def restart_ghost_collision(self):
